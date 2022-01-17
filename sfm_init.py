@@ -440,7 +440,7 @@ class RPCSettingsUI(QtGui.QWidget):
             
             if info[0] == True: # Show Map Name
                 try:
-                    consoleFile = open(os.getcwd() + r"/usermod/console.log", 'r', encoding='utf-8')
+                    consoleFile = open(os.getcwd() + r"/usermod/console.log", 'rb')
                     consoleText = consoleFile.read().splitlines()
                     consoleFile.close()
 
@@ -523,7 +523,7 @@ class RPCSettingsUI(QtGui.QWidget):
             
             if info[0] == True: # Show Map Name
                 try:
-                    consoleFile = open(os.getcwd() + r"/usermod/console.log", 'r', encoding='utf-8')
+                    consoleFile = open(os.getcwd() + r"/usermod/console.log", 'rb')
                     consoleText = consoleFile.read().splitlines()
                     consoleFile.close()
 
