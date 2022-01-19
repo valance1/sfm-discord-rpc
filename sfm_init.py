@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-
-
 #discord
 #------------------------------------------------------------------------
 # DISCORD RPC MODULE WRITTEN BY https://github.com/niveshbirangal PORTED
@@ -236,12 +234,6 @@ class UnixDiscordIpcClient(DiscordIpcClient):
     def _close(self):
         self._sock.close()
 
-client_id = '776865330437292052'  # Send the client ID to the rpc module
-
-rpc_obj = DiscordIpcClient.for_platform(str(client_id))
-print("SourceFilmmaker Discord Rich Presence by valance deployed.")
-start_time = mktime(time.localtime())
-tempo = 0
 
 # Here's how it works, app gets added to menu, as the class is instanced it starts
 # a timer even though the window isn't open, then we use
@@ -249,10 +241,24 @@ tempo = 0
 # when update happens, function opens file, reads settings, retrieve data
 # and then sends discord the info.
 
+start_time = mktime(time.localtime())
+
 class RPCSettingsUI(QtGui.QWidget):
     def __init__(self):
         
         super(RPCSettingsUI, self).__init__()
+
+        # RPC
+        
+        self.client_id = '776865330437292052'  # Send the client ID to the rpc module
+        self.rpc_obj = object
+        try:
+            self.rpc_obj = DiscordIpcClient.for_platform(str(self.client_id))
+            print("SourceFilmmaker Discord Rich Presence by valance deployed.")
+        except WindowsError:
+            print("Failed to localize discord on startup")
+
+        
         self.Window()
         self.updateRPC()
         timer = QtCore.QTimer(self)
@@ -376,8 +382,21 @@ class RPCSettingsUI(QtGui.QWidget):
         mensagem = QtGui.QMessageBox()
         mensagem.setText(message)
         mensagem.exec_()
-
-
+        
+    def attemptReconnect(self):
+        try:
+            self.rpc_obj = DiscordIpcClient.for_platform(str(self.client_id))
+            print("\nSourceFilmmaker Discord Rich Presence by valance deployed.")
+            print("Reconnected to discord")
+        except IOError:
+            print("Failed")
+            return False
+        except WindowsError:
+            print("Failed")
+            return False
+        else:
+            self.rpc_obj = DiscordIpcClient.for_platform(str(self.client_id))
+            return True
     def saveSettings(self):
         info = []
         info.append(self.showMapCheckBox.isChecked()) # 0 
@@ -440,7 +459,7 @@ class RPCSettingsUI(QtGui.QWidget):
             
             if info[0] == True: # Show Map Name
                 try:
-                    consoleFile = open(os.getcwd() + r"/usermod/console.log", 'rb')
+                    consoleFile = open(os.getcwd() + r"/usermod/console.log", 'r', encoding='utf-8')
                     consoleText = consoleFile.read().splitlines()
                     consoleFile.close()
 
@@ -474,9 +493,15 @@ class RPCSettingsUI(QtGui.QWidget):
             activity['details'] = 'Loading project...'
             
         try:
-            rpc_obj.set_activity(activity)
+            self.rpc_obj.set_activity(activity)
+        except AttributeError:
+            print("\nDiscord not found, trying to reconnect")
+            if self.attemptReconnect():
+                self.rpc_obj.set_activity(activity)
         except IOError:
-            print("Discord not found")
+            print("\nDiscord not found, trying to reconnect")
+            if self.attemptReconnect():
+                self.rpc_obj.set_activity(activity)
         
     def updateRPC(self):
         #print("Updated")
@@ -557,9 +582,15 @@ class RPCSettingsUI(QtGui.QWidget):
         else:
             activity['details'] = 'Loading project...'
         try:
-            rpc_obj.set_activity(activity)
+            self.rpc_obj.set_activity(activity)
+        except AttributeError:
+            print("\nDiscord not found, trying to reconnect")
+            if self.attemptReconnect():
+                self.rpc_obj.set_activity(activity)
         except IOError:
-            print("Discord not found")
+            print("\nDiscord not found, trying to reconnect")
+            if self.attemptReconnect():
+                self.rpc_obj.set_activity(activity)
             
 
         
